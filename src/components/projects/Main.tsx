@@ -18,42 +18,44 @@ import {
 } from 'lucide-react'
 import myImage from '../Pictures/Avatar.png'
 
-export default function AboutPage(): React.ReactElement {
-  const socialLinks = [
-    { 
-      icon: InstagramIcon, 
-      href: "https://www.instagram.com/cartiii_dior/",
-      color: "text-blue-500 hover:text-blue-600"
-    },
-    { 
-      icon: GithubIcon, 
-      href: "https://github.com/IrishLince",
-      color: "text-gray-500 hover:text-gray-700"
-    },
-    { 
-      icon: TwitterIcon, 
-      href: "https://x.com/iriiiissshh?s=21",
-      color: "text-cyan-500 hover:text-cyan-600"
-    }
-  ]
+// Memoized static data outside component to prevent re-creation
+const socialLinks = [
+  { 
+    icon: InstagramIcon, 
+    href: "https://www.instagram.com/cartiii_dior/",
+    color: "text-blue-500 hover:text-blue-600"
+  },
+  { 
+    icon: GithubIcon, 
+    href: "https://github.com/IrishLince",
+    color: "text-gray-500 hover:text-gray-700"
+  },
+  { 
+    icon: TwitterIcon, 
+    href: "https://x.com/iriiiissshh?s=21",
+    color: "text-cyan-500 hover:text-cyan-600"
+  }
+]
 
-  const contactInfo = [
-    { 
-      icon: Mail, 
-      text: "irishlince03@gmail.com",
-      href: "mailto:irishlince03@gmail.com"
-    },
-    { 
-      icon: Phone, 
-      text: "+63 939 412 3330",
-      href: "tel:+639394123330"
-    },
-    { 
-      icon: MapPin, 
-      text: "Pasay City, Metro Manila, Philippines",
-      href: "#"
-    }
-  ]
+const contactInfo = [
+  { 
+    icon: Mail, 
+    text: "irishlince03@gmail.com",
+    href: "mailto:irishlince03@gmail.com"
+  },
+  { 
+    icon: Phone, 
+    text: "+63 939 412 3330",
+    href: "tel:+639394123330"
+  },
+  { 
+    icon: MapPin, 
+    text: "Pasay City, Metro Manila, Philippines",
+    href: "#"
+  }
+]
+
+export default function AboutPage(): React.ReactElement {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0a0a0a] to-[#1a1a1a] relative overflow-hidden" suppressHydrationWarning>

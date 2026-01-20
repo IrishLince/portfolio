@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import { Renderer, Program, Mesh, Triangle } from 'ogl';
 
 interface PlasmaProps {
@@ -9,6 +9,14 @@ interface PlasmaProps {
   opacity?: number;
   mouseInteractive?: boolean;
 }
+
+// Mobile detection helper - runs once
+const isMobileDevice = (): boolean => {
+  if (typeof window === 'undefined') return false;
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+    window.innerWidth < 768 ||
+    ('ontouchstart' in window);
+};
 
 const hexToRgb = (hex: string): [number, number, number] => {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -41,6 +49,8 @@ uniform vec2 uMouse;
 uniform float uMouseInteractive;
 out vec4 fragColor;
 
+uniform float uIterations;
+
 void mainImage(out vec4 o, vec2 C) {
   vec2 center = iResolution.xy * 0.5;
   C = (C - center) / uScale + center;
@@ -50,8 +60,9 @@ void mainImage(out vec4 o, vec2 C) {
   
   float i, d, z, T = iTime * uSpeed * uDirection;
   vec3 O, p, S;
+  float maxIter = uIterations;
 
-  for (vec2 r = iResolution.xy, Q; ++i < 60.; O += o.w/d*o.xyz) {
+  for (vec2 r = iResolution.xy, Q; ++i < maxIter; O += o.w/d*o.xyz) {
     p = z*normalize(vec3(C-.5*r,r.y)); 
     p.z -= 4.; 
     S = p;
@@ -98,6 +109,9 @@ export const Plasma: React.FC<PlasmaProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mousePos = useRef({ x: 0, y: 0 });
+  
+  // Memoize mobile detection to avoid recalculation
+  const isMobile = useMemo(() => isMobileDevice(), []);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -107,11 +121,15 @@ export const Plasma: React.FC<PlasmaProps> = ({
 
     const directionMultiplier = direction === 'reverse' ? -1.0 : 1.0;
 
+    // Mobile: lower DPR (1) and reduced iterations for GPU performance
+    const mobileDpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+    const iterations = isMobile ? 30.0 : 60.0;
+
     const renderer = new Renderer({
       webgl: 2,
       alpha: true,
       antialias: false,
-      dpr: Math.min(window.devicePixelRatio || 1, 2)
+      dpr: mobileDpr
     });
     const gl = renderer.gl;
     const canvas = gl.canvas as HTMLCanvasElement;
@@ -135,7 +153,8 @@ export const Plasma: React.FC<PlasmaProps> = ({
         uScale: { value: scale },
         uOpacity: { value: opacity },
         uMouse: { value: new Float32Array([0, 0]) },
-        uMouseInteractive: { value: mouseInteractive ? 1.0 : 0.0 }
+        uMouseInteractive: { value: mouseInteractive ? 1.0 : 0.0 },
+        uIterations: { value: iterations }
       }
     });
 
@@ -165,7 +184,17 @@ export const Plasma: React.FC<PlasmaProps> = ({
       res[1] = gl.drawingBufferHeight;
     };
 
-    const ro = new ResizeObserver(setSize);
+    // Throttle resize handling to prevent layout thrashing
+    let resizeTimeout: ReturnType<typeof setTimeout> | null = null;
+    const throttledSetSize = () => {
+      if (resizeTimeout) return;
+      resizeTimeout = setTimeout(() => {
+        setSize();
+        resizeTimeout = null;
+      }, 100);
+    };
+    
+    const ro = new ResizeObserver(throttledSetSize);
     ro.observe(containerRef.current);
     setSize();
 
@@ -200,7 +229,7 @@ export const Plasma: React.FC<PlasmaProps> = ({
         containerRef.current?.removeChild(canvas);
       } catch {}
     };
-  }, [color, speed, direction, scale, opacity, mouseInteractive]);
+  }, [color, speed, direction, scale, opacity, mouseInteractive, isMobile]);
 
   return <div ref={containerRef} className="w-full h-full relative overflow-hidden" />;
 };
