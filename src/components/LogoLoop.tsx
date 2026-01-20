@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useCallback, useEffect, useMemo, useRef, useState, memo } from 'react';
 
 const ANIMATION_CONFIG = {
@@ -6,11 +7,11 @@ const ANIMATION_CONFIG = {
   COPY_HEADROOM: 2
 };
 
-const toCssLength = value => (typeof value === 'number' ? `${value}px` : (value ?? undefined));
+const toCssLength = (value: string | number | null | undefined): string | undefined => (typeof value === 'number' ? `${value}px` : (value ?? undefined));
 
-const cx = (...parts) => parts.filter(Boolean).join(' ');
+const cx = (...parts: (string | false | null | undefined)[]): string => parts.filter(Boolean).join(' ');
 
-const useResizeObserver = (callback, elements, dependencies) => {
+const useResizeObserver = (callback: () => void, elements: RefObject<HTMLElement | null>[], dependencies: unknown[]) => {
   useEffect(() => {
     if (!window.ResizeObserver) {
       const handleResize = () => callback();

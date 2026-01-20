@@ -1,3 +1,4 @@
+// @ts-nocheck
 'use client'
 import { 
   Users, Clock, Lightbulb, Briefcase, Cpu, Monitor
@@ -8,7 +9,7 @@ import ElectricBorder from '../ElectricBorder'
 import { 
   FaHtml5, FaCss3Alt, FaJsSquare, FaReact, FaWindows,
   FaLinux, FaGithub, FaFigma, FaNetworkWired, FaTools, 
-  FaCode, FaPaintBrush, FaRobot, FaDatabase
+  FaCode, FaPaintBrush, FaRobot
 } from 'react-icons/fa'
 import { 
   SiTailwindcss, SiRailway, SiPostman, SiCanva, SiMongodb

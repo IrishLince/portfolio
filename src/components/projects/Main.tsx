@@ -13,7 +13,6 @@ import Plasma from '../plasma';
 
 
 import { 
-  Briefcase, ArrowDown, 
   InstagramIcon, GithubIcon, TwitterIcon, 
   Mail, Phone, MapPin
 } from 'lucide-react'

@@ -5,7 +5,7 @@ import { Navbar } from '../../components/navbar';
 import { Footer } from '../../components/footer';
 
 const ProjectAccordion = () => {
-  const [openProject, setOpenProject] = useState(null);
+  const [openProject, setOpenProject] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -59,7 +59,7 @@ const ProjectAccordion = () => {
     }
   ];
 
-  const toggleProject = (projectId) => {
+  const toggleProject = (projectId: string) => {
     setOpenProject(openProject === projectId ? null : projectId);
   };
 
