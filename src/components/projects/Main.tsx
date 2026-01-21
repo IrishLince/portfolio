@@ -16,7 +16,7 @@ import {
   InstagramIcon, GithubIcon, TwitterIcon, 
   Mail, Phone, MapPin
 } from 'lucide-react'
-import myImage from '../Pictures/Avatar.png'
+import myImage from '../Pictures/IrishFormal.png'
 
 // Memoized static data outside component to prevent re-creation
 const socialLinks = [

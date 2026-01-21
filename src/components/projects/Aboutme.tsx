@@ -3,7 +3,9 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import TiltedCard from '../TiltedCard'
-import AboutPhoto from '../Pictures/AboutPhoto.png'
+
+// Use static import for IrishFormal
+import IrishFormal from '../Pictures/IrishFormal.png'
 import LogoLoop from '../LogoLoop'
 import { SiReact, SiNextdotjs, SiTypescript, SiTailwindcss } from 'react-icons/si'
 import Aurora from '../Aurora'
@@ -79,7 +81,7 @@ export function Aboutme(): React.ReactElement {
           >
             <div className="w-[260px] h-[340px] sm:w-[280px] sm:h-[360px] md:w-[320px] md:h-[400px]">
               <TiltedCard
-                imageSrc={AboutPhoto.src}
+                imageSrc={IrishFormal?.src}
                 altText="Irish Lince"
                 scaleOnHover={1.2}
                 showTooltip={false}
