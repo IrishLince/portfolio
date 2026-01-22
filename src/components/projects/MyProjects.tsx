@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, memo, useCallback } from 'react'
-import { motion } from 'framer-motion'
-import { ChevronDown, ExternalLink } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { ChevronDown, ExternalLink, Briefcase, Calendar, Code, Zap, CheckCircle } from 'lucide-react'
 
 // Type definitions
 interface Project {
@@ -60,6 +60,7 @@ const PROJECTS_DATA: Project[] = [
     title: "E-commerce Dashboard",
     technology: "Next.js, Java Backend, RESTful APIs",
     description: "Created an administrative dashboard for managing products, orders, and customer data with real-time updates.",
+    projectUrl: "#",
     role: "Backend Developer",
     duration: "2023",
     keyFeatures: [
@@ -74,86 +75,134 @@ const PROJECTS_DATA: Project[] = [
 // Memoize ProjectCard component
 const ProjectCard = memo(({ project, isOpen, onToggle, index }: ProjectCardProps) => (
   <motion.div
-    key={project.id}
-    initial={{ opacity: 0, y: 30 }}
+    initial={{ opacity: 0, y: 20 }}
     whileInView={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.4, delay: Math.min(index * 0.05, 0.2) }}
-    viewport={{ once: true, margin: '0px 0px -50px 0px' }}
-    className="bg-[#2a2a2a]/50 rounded-xl border border-gray-700/50 overflow-hidden shadow-lg transition-all duration-300 hover:border-gray-600"
-    style={{ willChange: 'transform' }}
+    transition={{ duration: 0.5, delay: index * 0.1 }}
+    viewport={{ once: true, margin: '0px 0px -100px 0px' }}
+    className="group"
   >
     <button
       onClick={() => onToggle(project.id)}
-      className="w-full px-6 md:px-8 py-6 flex items-center justify-between hover:bg-[#2a2a2a]/70 transition-all duration-300 group"
+      className="w-full text-left"
     >
-      <div className="flex flex-col items-start text-left">
-        <h3 className="text-xl md:text-2xl font-semibold text-[#ff4d00] group-hover:text-[#ff6b33] transition-colors duration-300">
-          {project.title}
-        </h3>
-        <p className="text-sm md:text-base text-gray-400 mt-2 font-medium">
-          {project.technology}
-        </p>
+      <div className="bg-gradient-to-br from-[#1a1a1a] to-[#0f0f0f] border border-gray-800/50 rounded-2xl p-6 sm:p-8 hover:border-[#ff4d00]/30 transition-all duration-300 cursor-pointer group/card"
+      >
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            <motion.h3 
+              className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-[#ff6b35] to-[#ff4d00] bg-clip-text text-transparent mb-2 group-hover/card:from-[#ff8a5b] group-hover/card:to-[#ff6b35] transition-all duration-300"
+            >
+              {project.title}
+            </motion.h3>
+            <div className="flex flex-wrap items-center gap-2 mb-4">
+              <Code className="w-4 h-4 text-[#ff4d00]" />
+              <p className="text-sm text-gray-400 font-medium">
+                {project.technology}
+              </p>
+            </div>
+          </div>
+          <motion.div
+            animate={{ rotate: isOpen ? 180 : 0 }}
+            transition={{ duration: 0.3 }}
+            className="flex-shrink-0"
+          >
+            <ChevronDown className="w-6 h-6 text-[#ff4d00] group-hover/card:text-[#ff6b35] transition-colors" />
+          </motion.div>
+        </div>
       </div>
-      <ChevronDown
-        className={`w-6 h-6 md:w-7 md:h-7 text-gray-400 transform transition-transform duration-300 group-hover:text-gray-300 ${
-          isOpen ? 'rotate-180' : ''
-        }`}
-        style={{ willChange: 'transform' }}
-      />
     </button>
 
-    {isOpen && (
-      <motion.div
-        initial={{ opacity: 0, height: 0 }}
-        animate={{ opacity: 1, height: 'auto' }}
-        exit={{ opacity: 0, height: 0 }}
-        transition={{ duration: 0.2 }}
-        className="px-6 md:px-8 pb-8 space-y-8"
-      >
-        <div className="space-y-4">
-          <div>
-            <h4 className="text-lg md:text-xl font-semibold text-white mb-3">Description</h4>
-            <p className="text-gray-300 leading-relaxed">{project.description}</p>
-            {project.projectUrl && (
-              <a
-                href={project.projectUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-[#ff4d00] hover:text-[#ff6b33] mt-4 font-medium transition-all duration-300 hover:gap-3"
-              >
-                View Project <ExternalLink className="w-4 h-4 md:w-5 md:h-5" />
-              </a>
-            )}
-          </div>
-        </div>
+    <AnimatePresence mode="wait">
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.3 }}
+          className="overflow-hidden"
+        >
+          <div className="bg-gradient-to-b from-[#0f0f0f] to-[#1a1a1a] border-l border-r border-b border-gray-800/50 rounded-b-2xl p-6 sm:p-8 space-y-8">
+            {/* Description Section */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="space-y-4"
+            >
+              <h4 className="text-lg font-semibold text-white flex items-center gap-2">
+                <Zap className="w-5 h-5 text-[#ff4d00]" />
+                Overview
+              </h4>
+              <p className="text-gray-300 leading-relaxed text-base">
+                {project.description}
+              </p>
+              {project.projectUrl && project.projectUrl !== '#' && (
+                <motion.a
+                  href={project.projectUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ x: 5 }}
+                  className="inline-flex items-center gap-2 text-[#ff4d00] hover:text-[#ff6b35] font-semibold transition-all duration-300 group/link"
+                >
+                  <ExternalLink className="w-4 h-4 group-hover/link:rotate-45 transition-transform" />
+                  View Live Project
+                </motion.a>
+              )}
+            </motion.div>
 
-        <div className="space-y-4">
-          <h4 className="text-lg md:text-xl font-semibold text-white">Key Features</h4>
-          <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {project.keyFeatures.map((feature: string, idx: number) => (
-              <li
-                key={idx}
-                className="text-gray-300 flex items-center gap-3 bg-[#2a2a2a]/30 rounded-lg px-4 py-3 md:py-4 transition-all duration-300 hover:translate-x-1 hover:bg-[#2a2a2a]/50"
-              >
-                <span className="text-[#ff4d00] text-lg">•</span>
-                <span className="leading-relaxed">{feature}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+            {/* Key Features */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 }}
+              className="space-y-4"
+            >
+              <h4 className="text-lg font-semibold text-white flex items-center gap-2">
+                <CheckCircle className="w-5 h-5 text-[#ff4d00]" />
+                Key Features
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {project.keyFeatures.map((feature: string, idx: number) => (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2 + idx * 0.05 }}
+                    className="flex items-center gap-3 bg-[#1a1a1a]/60 border border-gray-800/30 rounded-lg px-4 py-3 hover:border-[#ff4d00]/20 hover:bg-[#1a1a1a]/80 transition-all duration-300"
+                  >
+                    <span className="text-[#ff4d00] text-lg">→</span>
+                    <span className="text-gray-300 text-sm font-medium">{feature}</span>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 pt-2">
-          <div className="space-y-2 transition-all duration-300 hover:translate-y-[-2px]">
-            <h4 className="text-lg md:text-xl font-semibold text-white">Role</h4>
-            <p className="text-gray-300">{project.role}</p>
+            {/* Role & Duration */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4 border-t border-gray-800/30"
+            >
+              <div className="space-y-3">
+                <h4 className="text-base font-semibold text-white flex items-center gap-2">
+                  <Briefcase className="w-4 h-4 text-[#ff4d00]" />
+                  Role
+                </h4>
+                <p className="text-gray-300 text-sm leading-relaxed">{project.role}</p>
+              </div>
+              <div className="space-y-3">
+                <h4 className="text-base font-semibold text-white flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-[#ff4d00]" />
+                  Duration
+                </h4>
+                <p className="text-gray-300 text-sm leading-relaxed">{project.duration}</p>
+              </div>
+            </motion.div>
           </div>
-          <div className="space-y-2 transition-all duration-300 hover:translate-y-[-2px]">
-            <h4 className="text-lg md:text-xl font-semibold text-white">Duration</h4>
-            <p className="text-gray-300">{project.duration}</p>
-          </div>
-        </div>
-      </motion.div>
-    )}
+        </motion.div>
+      )}
+    </AnimatePresence>
   </motion.div>
 ))
 ProjectCard.displayName = 'ProjectCard'
@@ -168,18 +217,31 @@ function MyProjectsContent() {
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8 relative">
       <div className="max-w-6xl mx-auto">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
+          transition={{ duration: 0.5 }}
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">My Projects</h2>
-          <p className="text-gray-400 text-lg">Explore my recent work and achievements</p>
+          <motion.h2 
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-white via-white to-gray-400 bg-clip-text text-transparent mb-4"
+          >
+            My Projects
+          </motion.h2>
+          <motion.p 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="text-lg text-gray-400 font-medium"
+          >
+            Explore my recent work and achievements
+          </motion.p>
         </motion.div>
 
-        <div className="space-y-6">
+        {/* Projects Grid */}
+        <div className="space-y-4">
           {PROJECTS_DATA.map((project, index) => (
             <ProjectCard
               key={project.id}
