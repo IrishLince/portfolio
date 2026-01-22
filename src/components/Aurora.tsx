@@ -1,5 +1,5 @@
 import { Renderer, Program, Mesh, Color, Triangle } from 'ogl';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 
 const VERT = `#version 300 es
 in vec2 position;
@@ -122,6 +122,15 @@ export default function Aurora(props: AuroraProps) {
 
   const ctnDom = useRef<HTMLDivElement>(null);
 
+  // Memoize color stops conversion to reduce calculations
+  const colorStopsArray = useMemo(() => {
+    const stops = props.colorStops ?? ['#ff9466', '#ca4e4e', '#842a5a'];
+    return stops.map(hex => {
+      const c = new Color(hex);
+      return [c.r, c.g, c.b];
+    });
+  }, [props.colorStops]);
+
   useEffect(() => {
     const ctn = ctnDom.current;
     if (!ctn) return;
@@ -155,11 +164,6 @@ export default function Aurora(props: AuroraProps) {
     if (geometry.attributes.uv) {
       delete geometry.attributes.uv;
     }
-
-    const colorStopsArray = colorStops.map(hex => {
-      const c = new Color(hex);
-      return [c.r, c.g, c.b];
-    });
 
     program = new Program(gl, {
       vertex: VERT,

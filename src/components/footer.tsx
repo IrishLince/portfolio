@@ -1,4 +1,6 @@
-export function Footer() {
+import { memo } from 'react'
+
+function FooterContent() {
   return (
     <footer className="py-6 px-4 lg:px-12 border-t border-gray-800">
       <div className="max-w-7xl mx-auto">
@@ -7,3 +9,6 @@ export function Footer() {
     </footer>
   );
 }
+
+export const Footer = memo(FooterContent)
+FooterContent.displayName = 'FooterContent'

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, memo } from 'react';
 
 function hexToRgba(hex, alpha = 1) {
   if (!hex) return `rgba(0,0,0,${alpha})`;
@@ -16,7 +16,7 @@ function hexToRgba(hex, alpha = 1) {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
-const ElectricBorder = ({
+const ElectricBorderContent = ({
   children,
   color = '#5227FF',
   speed = 1,
@@ -61,7 +61,9 @@ const ElectricBorder = ({
       let amplitude = baseAmplitude;
       let frequency = baseFrequency;
 
-      for (let i = 0; i < octaves; i++) {
+      // Reduce octaves for performance on low-end GPUs
+      const maxOctaves = Math.min(octaves, 6);
+      for (let i = 0; i < maxOctaves; i++) {
         let octaveAmplitude = amplitude;
         if (i === 0) {
           octaveAmplitude *= baseFlatness;
@@ -150,7 +152,7 @@ const ElectricBorder = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const octaves = 10;
+    const octaves = 8; // Reduced from 10
     const lacunarity = 1.6;
     const gain = 0.7;
     const amplitude = chaos;
@@ -164,11 +166,12 @@ const ElectricBorder = ({
       const width = rect.width + borderOffset * 2;
       const height = rect.height + borderOffset * 2;
 
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5); // Cap DPR for low-end devices
       canvas.width = width * dpr;
       canvas.height = height * dpr;
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
+      canvas.style.willChange = 'contents';
       ctx.scale(dpr, dpr);
 
       return { width, height };
@@ -183,7 +186,7 @@ const ElectricBorder = ({
       timeRef.current += deltaTime * speed;
       lastFrameTimeRef.current = currentTime;
 
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.scale(dpr, dpr);
@@ -202,7 +205,8 @@ const ElectricBorder = ({
       const radius = Math.min(borderRadius, maxRadius);
 
       const approximatePerimeter = 2 * (borderWidth + borderHeight) + 2 * Math.PI * radius;
-      const sampleCount = Math.floor(approximatePerimeter / 2);
+      // Reduced sample count for better performance on low-end GPUs
+      const sampleCount = Math.floor(approximatePerimeter / 3);
 
       ctx.beginPath();
 
@@ -297,5 +301,8 @@ const ElectricBorder = ({
     </div>
   );
 };
+
+const ElectricBorder = memo(ElectricBorderContent)
+ElectricBorderContent.displayName = 'ElectricBorderContent'
 
 export default ElectricBorder;

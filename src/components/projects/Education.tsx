@@ -6,71 +6,76 @@ import {
   Lightbulb, CheckCircle
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import React, { useState } from 'react'
+import React, { useState, useCallback, useMemo, memo } from 'react'
+
+const EDUCATION_DATA = [
+  {
+    title: "Current Education",
+    icon: <GraduationCap className="w-8 h-8 text-blue-400" />,
+    details: {
+      school: "Centro Escolar University Makati",
+      degree: "BSIT - Information Technology",
+      duration: "2021 - Present",
+      highlights: [
+        "Pursuing Bachelor's degree in Information Technology",
+        "Focusing on web development and Cybersecurity",
+        "Active participation in tech-related university activities"
+      ]
+    }
+  },
+  {
+    title: "Acedemic Achievements",
+    icon: <Award className="w-8 h-8 text-purple-400" />,
+    details: {
+      focus: "Web Development, Programming, Hardware",
+      goals: [
+        "Dean's Lister 1st SEM (S.Y 2022-2023)",
+        "Dean's Lister 1st SEM (S.Y 2023-2024)",
+        "Dean's Lister 1st SEM (S.Y 2024-2025)",
+        "JPCS-CSIT DAYS PC Assembly, Champion (S.Y 2022-2023)",
+        "JPCS-CSIT DAYS PC Assembly, 1st Place (S.Y 2023-2024)",
+        "Tesda Computer Servicing National Certification II",
+        "PEAC Scholar Senior high School (S.Y 2020-2022)"
+      ]
+    }
+  },
+  {
+    title: "Skills Development",
+    icon: <Target className="w-8 h-8 text-green-400" />,
+    details: {
+      focus: "Continuous Learning",
+      areas: [
+        "Frontend",
+        "Backend",
+        "UI/UX Design Principles",
+        "Pc Assembly And Disassembly"
+      ]
+    }
+  }
+]
 
 export function EducationGoals(): React.ReactElement {
   const [, setActiveCard] = useState<number | null>(null)
   const [selectedView, setSelectedView] = useState('timeline')
-
-  const educationData = [
-    {
-      title: "Current Education",
-      icon: <GraduationCap className="w-8 h-8 text-blue-400" />,
-      details: {
-        school: "Centro Escolar University Makati",
-        degree: "BSIT - Information Technology",
-        duration: "2021 - Present",
-        highlights: [
-          "Pursuing Bachelor's degree in Information Technology",
-          "Focusing on web development and Cybersecurity",
-          "Active participation in tech-related university activities"
-        ]
-      }
-    },
-    {
-      title: "Acedemic Achievements",
-      icon: <Award className="w-8 h-8 text-purple-400" />,
-      details: {
-        focus: "Web Development, Programming, Hardware",
-        goals: [
-          "Dean's Lister 1st SEM (S.Y 2022-2023)",
-          "Dean's Lister 1st SEM (S.Y 2023-2024)",
-          "Dean's Lister 1st SEM (S.Y 2024-2025)",
-          "JPCS-CSIT DAYS PC Assembly, Champion (S.Y 2022-2023)",
-          "JPCS-CSIT DAYS PC Assembly, 1st Place (S.Y 2023-2024)",
-          "Tesda Computer Servicing National Certification II",
-          "PEAC Scholar Senior high School (S.Y 2020-2022)"
-
-        ]
-      }
-    },
-    {
-      title: "Skills Development",
-      icon: <Target className="w-8 h-8 text-green-400" />,
-      details: {
-        focus: "Continuous Learning",
-        areas: [
-          "Frontend",
-          "Backend",
-          "UI/UX Design Principles",
-          "Pc Assembly And Disassembly"
-        ]
-      }
-    }
-  ]
+  
+  const handleViewChange = useCallback((view: string) => {
+    setSelectedView(view)
+  }, [])
 
   return (
    <section className="py-16 px-6 lg:px-12 bg-[#1a1a1a] relative overflow-hidden">
       {/* Background Pattern */}
-      <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
+      <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" style={{ willChange: 'contents' }}></div>
       
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header Section */}
         <div className="text-center mb-24">
           <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.4 }}
             className="inline-block p-6 rounded-3xl bg-blue-500/10 mb-8"
+            style={{ willChange: 'transform' }}
           >
             <Book className="w-14 h-14 text-blue-400" />
           </motion.div>
@@ -88,7 +93,7 @@ export function EducationGoals(): React.ReactElement {
             {['timeline', 'grid'].map((view) => (
               <button
                 key={view}
-                onClick={() => setSelectedView(view)}
+                onClick={() => handleViewChange(view)}
                 className={`px-6 py-3 rounded-xl transition-all duration-300 ${
                   selectedView === view 
                     ? 'bg-blue-500 text-white' 
@@ -115,7 +120,7 @@ export function EducationGoals(): React.ReactElement {
                 : 'flex flex-col space-y-8'
             }`}
           >
-            {educationData.map((item, index) => (
+            {EDUCATION_DATA.map((item, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}

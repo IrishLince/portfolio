@@ -1,6 +1,6 @@
 // @ts-nocheck
 'use client'
-import React from 'react'
+import React, { memo, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import TiltedCard from '../TiltedCard'
 
@@ -12,6 +12,7 @@ import Aurora from '../Aurora'
 import ScrambledText from '../ScrambledText'
 import Shuffle from '../Shuffle'
 
+// Memoize tech logos to prevent recreation on every render
 const techLogos = [
   { node: <SiReact size={40} color="#61DAFB" />, title: "React", href: "https://react.dev" },
   { node: <SiNextdotjs size={40} color="#ffffff" />, title: "Next.js", href: "https://nextjs.org" },
@@ -19,15 +20,22 @@ const techLogos = [
   { node: <SiTailwindcss size={40} color="#06B6D4" />, title: "Tailwind CSS", href: "https://tailwindcss.com" },
 ]
 
-export function Aboutme(): React.ReactElement {
+function AboutmeContent(): React.ReactElement {
+  // Memoize aurora props
+  const auroraProps = useMemo(() => ({
+    colorStops: ["#ff9466", "#ca4e4e", "#842a5a"],
+    speed: 0.6,
+    blend: 0.07
+  }), [])
+
   return (
     <section className="py-16 md:py-32 px-4 sm:px-6 lg:px-12 relative min-h-screen overflow-hidden">
       {/* Aurora Background */}
-      <div className="absolute inset-0 -z-10">
+      <div className="absolute inset-0 -z-10" style={{ willChange: 'contents' }}>
         <Aurora
-          colorStops={["#ff9466", "#ca4e4e", "#842a5a"]}
-          speed={0.6}
-          blend={0.07}
+          colorStops={auroraProps.colorStops}
+          speed={auroraProps.speed}
+          blend={auroraProps.blend}
         />
       </div>
 
@@ -55,7 +63,7 @@ export function Aboutme(): React.ReactElement {
                 stagger={0.03}
                 threshold={0.1}
                 triggerOnce={true}
-                triggerOnHover={true}
+                triggerOnHover={false}
                 respectReducedMotion={true}
               />
             </div>
@@ -117,3 +125,6 @@ export function Aboutme(): React.ReactElement {
     </section>
   )
 }
+
+export const Aboutme = memo(AboutmeContent)
+AboutmeContent.displayName = 'AboutmeContent'

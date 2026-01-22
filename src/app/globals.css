@@ -120,13 +120,34 @@
   }
 }
 
-/* Hide scrollbar but keep functionality */
+/* Performance optimizations for animations */
 @layer utilities {
+  /* Hide scrollbar but keep functionality */
   .scrollbar-hide {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
   }
   .scrollbar-hide::-webkit-scrollbar {
     display: none;  /* Chrome, Safari, Opera */
+  }
+  
+  /* GPU acceleration for animations - use transform and opacity only */
+  .animate-gpu {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+  
+  /* Smooth animations with GPU acceleration */
+  .motion-reduce {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  /* Canvas optimization */
+  canvas {
+    display: block;
   }
 }

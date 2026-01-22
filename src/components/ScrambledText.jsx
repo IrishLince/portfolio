@@ -5,6 +5,18 @@ import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin';
 
 gsap.registerPlugin(SplitText, ScrambleTextPlugin);
 
+// Throttle function for pointer events
+const throttlePointerEvent = (callback, limit = 16) => {
+  let inThrottle;
+  return function (...args) {
+    if (!inThrottle) {
+      callback.apply(this, args);
+      inThrottle = true;
+      setTimeout(() => (inThrottle = false), limit);
+    }
+  };
+};
+
 const ScrambledText = ({
   radius = 100,
   duration = 1.2,
@@ -52,11 +64,13 @@ const ScrambledText = ({
       });
     };
 
+    const throttledHandleMove = throttlePointerEvent(handleMove, 16);
+
     const el = rootRef.current;
-    el.addEventListener('pointermove', handleMove);
+    el.addEventListener('pointermove', throttledHandleMove);
 
     return () => {
-      el.removeEventListener('pointermove', handleMove);
+      el.removeEventListener('pointermove', throttledHandleMove);
       split.revert();
     };
   }, [radius, duration, speed, scrambleChars]);

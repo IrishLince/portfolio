@@ -122,8 +122,10 @@ export const Plasma: React.FC<PlasmaProps> = ({
     const directionMultiplier = direction === 'reverse' ? -1.0 : 1.0;
 
     // Mobile: lower DPR (1) and reduced iterations for GPU performance
+    // Disable mouse interactivity on mobile to save CPU cycles
     const mobileDpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
     const iterations = isMobile ? 30.0 : 60.0;
+    const isMouseInteractive = isMobile ? false : mouseInteractive;
 
     const renderer = new Renderer({
       webgl: 2,
@@ -153,7 +155,7 @@ export const Plasma: React.FC<PlasmaProps> = ({
         uScale: { value: scale },
         uOpacity: { value: opacity },
         uMouse: { value: new Float32Array([0, 0]) },
-        uMouseInteractive: { value: mouseInteractive ? 1.0 : 0.0 },
+        uMouseInteractive: { value: isMouseInteractive ? 1.0 : 0.0 },
         uIterations: { value: iterations }
       }
     });
@@ -161,7 +163,7 @@ export const Plasma: React.FC<PlasmaProps> = ({
     const mesh = new Mesh(gl, { geometry, program });
 
     const handleMouseMove = (e: MouseEvent) => {
-      if (!mouseInteractive) return;
+      if (!isMouseInteractive) return;
       const rect = containerRef.current!.getBoundingClientRect();
       mousePos.current.x = e.clientX - rect.left;
       mousePos.current.y = e.clientY - rect.top;

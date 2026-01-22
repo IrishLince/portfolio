@@ -1,7 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { ChevronDown, ExternalLink } from 'lucide-react';
-import { Navbar } from '../../components/navbar';
 import { Footer } from '../../components/footer';
 
 const ProjectAccordion = () => {
@@ -70,8 +69,6 @@ const ProjectAccordion = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#1a1a1a] text-white">
-      <Navbar />
-
       <main className="flex-1 px-4 lg:px-12 py-24 md:py-26">
         <div className="space-y-6 w-full max-w-7xl mx-auto">
           <h2 className={`text-3xl font-bold text-white mb-8 px-4 opacity-0 ${

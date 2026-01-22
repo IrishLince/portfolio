@@ -1,11 +1,23 @@
 // @ts-nocheck
-import { useRef, useState } from 'react';
+import { useRef, useState, useCallback } from 'react';
 import { motion, useMotionValue, useSpring } from 'motion/react';
 
 const springValues = {
   damping: 30,
   stiffness: 100,
   mass: 2
+};
+
+// Throttle mouse move events to reduce calculations
+const throttleMouseMove = (callback, limit = 16) => {
+  let inThrottle;
+  return function (...args) {
+    if (!inThrottle) {
+      callback.apply(this, args);
+      inThrottle = true;
+      setTimeout(() => (inThrottle = false), limit);
+    }
+  };
 };
 
 export default function TiltedCard({
@@ -38,7 +50,7 @@ export default function TiltedCard({
 
   const [lastY, setLastY] = useState(0);
 
-  function handleMouse(e) {
+  const handleMouse = useCallback((e) => {
     if (!ref.current) return;
 
     const rect = ref.current.getBoundingClientRect();
@@ -57,20 +69,22 @@ export default function TiltedCard({
     const velocityY = offsetY - lastY;
     rotateFigcaption.set(-velocityY * 0.6);
     setLastY(offsetY);
-  }
+  }, [rotateAmplitude, lastY, rotateX, rotateY, x, y, rotateFigcaption]);
 
-  function handleMouseEnter() {
+  const throttledHandleMouse = useCallback(throttleMouseMove(handleMouse, 16), [handleMouse]);
+
+  const handleMouseEnter = useCallback(() => {
     scale.set(scaleOnHover);
     opacity.set(1);
-  }
+  }, [scaleOnHover, scale, opacity]);
 
-  function handleMouseLeave() {
+  const handleMouseLeave = useCallback(() => {
     opacity.set(0);
     scale.set(1);
     rotateX.set(0);
     rotateY.set(0);
     rotateFigcaption.set(0);
-  }
+  }, [opacity, scale, rotateX, rotateY, rotateFigcaption]);
 
   return (
     <figure
@@ -80,7 +94,7 @@ export default function TiltedCard({
         height: containerHeight,
         width: containerWidth
       }}
-      onMouseMove={handleMouse}
+      onMouseMove={throttledHandleMouse}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >

@@ -1,16 +1,10 @@
 'use client'
-import React from 'react'
+import React, { useMemo, memo, Suspense, lazy, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Navbar } from '../navbar'
 import { Footer } from '../footer'
-import { TechnicalSkills } from './TechnicalSkills'
-import { Aboutme } from './Aboutme'
-import { EducationGoals } from './Education'
-import Plasma from '../plasma';
-
-
+import { StaggeredMenu } from '../StaggeredMenu'
 
 import { 
   InstagramIcon, GithubIcon, TwitterIcon, 
@@ -18,7 +12,15 @@ import {
 } from 'lucide-react'
 import myImage from '../Pictures/IrishFormal.png'
 
-// Memoized static data outside component to prevent re-creation
+// Lazy load all major section components
+const Plasma = lazy(() => import('../plasma'))
+const Aboutme = lazy(() => import('./Aboutme').then(mod => ({ default: mod.Aboutme })))
+const TechnicalSkills = lazy(() => import('./TechnicalSkills').then(mod => ({ default: mod.TechnicalSkills })))
+const MyProjects = lazy(() => import('./MyProjects').then(mod => ({ default: mod.MyProjects })))
+const EducationGoals = lazy(() => import('./Education').then(mod => ({ default: mod.EducationGoals })))
+const Footer_Component = lazy(() => import('../footer').then(mod => ({ default: mod.Footer })))
+
+// Memoized static data - moved outside component to prevent recreation
 const socialLinks = [
   { 
     icon: InstagramIcon, 
@@ -55,49 +57,90 @@ const contactInfo = [
   }
 ]
 
-export default function AboutPage(): React.ReactElement {
+const menuItems = [
+  { label: 'Home', ariaLabel: 'Go to home section', link: '#home' },
+  { label: 'About Me', ariaLabel: 'Learn about me', link: '#aboutme' },
+  { label: 'Technical Skills', ariaLabel: 'View my technical skills', link: '#technicalskills' },
+  { label: 'My Projects', ariaLabel: 'View my projects', link: '#myprojects' },
+  { label: 'Education', ariaLabel: 'View my education', link: '#education' }
+]
+
+const socialMenuItems = [
+  { label: 'Instagram', link: 'https://www.instagram.com/cartiii_dior/' },
+  { label: 'GitHub', link: 'https://github.com/IrishLince' },
+  { label: 'Twitter', link: 'https://x.com/iriiiissshh?s=21' }
+]
+
+// Loading placeholder for Plasma
+const PlasmaLoading = memo(() => (
+  <div className="absolute inset-0 w-full h-full bg-gradient-to-b from-[#ff6b35]/10 to-transparent" />
+))
+PlasmaLoading.displayName = 'PlasmaLoading'
+
+// Loading placeholders for sections
+const SectionLoading = memo(() => (
+  <div className="min-h-screen animate-pulse bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a]" />
+))
+SectionLoading.displayName = 'SectionLoading'
+
+function AboutPageContent(): React.ReactElement {
+  const handleMenuOpen = useCallback(() => console.log('Menu opened'), [])
+  const handleMenuClose = useCallback(() => console.log('Menu closed'), [])
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0a0a0a] to-[#1a1a1a] relative overflow-hidden" suppressHydrationWarning>
-
-
- 
-
-
-
-      <Navbar />
+      <StaggeredMenu
+        position="right"
+        items={menuItems}
+        socialItems={socialMenuItems}
+        displaySocials
+        displayItemNumbering={true}
+        menuButtonColor="#ffffff"
+        openMenuButtonColor="#fff"
+        changeMenuColorOnOpen={true}
+        colors={['#ff6b35', '#ff4d00']}
+        accentColor="#ff4d00"
+        isFixed={true}
+        onMenuOpen={handleMenuOpen}
+        onMenuClose={handleMenuClose}
+      />
 
       <motion.main 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
+        transition={{ duration: 0.5 }}
         className="relative z-20"
+        style={{ willChange: 'opacity' }}
       >
         {/* Hero Section */}
-        <section className="min-h-screen flex flex-col justify-center items-center text-center px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-          {/* Plasma Background */}
+        <section id="home" className="min-h-screen flex flex-col justify-center items-center text-center px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+          {/* Plasma Background - Lazy Loaded */}
           <div className="absolute inset-0 w-full h-full" style={{ zIndex: -1 }}>
-            <Plasma 
-              color="#ff6b35"
-              speed={0.6}
-              direction="forward"
-              scale={1.1}
-              opacity={0.8}
-              mouseInteractive={true}
-            />
+            <Suspense fallback={<PlasmaLoading />}>
+              <Plasma 
+                color="#ff6b35"
+                speed={0.6}
+                direction="forward"
+                scale={1.1}
+                opacity={0.8}
+                mouseInteractive={true}
+              />
+            </Suspense>
           </div>
           
           <div className="max-w-4xl mx-auto text-center">
             {/* Profile Image */}
             <motion.div
-              initial={{ scale: 0, rotate: -180 }}
-              animate={{ scale: 1, rotate: 0 }}
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
               transition={{ 
                 type: "spring", 
-                stiffness: 260, 
-                damping: 20 
+                stiffness: 180, 
+                damping: 25,
+                duration: 0.6
               }}
               className="mx-auto w-48 h-48 mb-8 relative"
+              style={{ willChange: 'transform' }}
             >
               <Image 
                 src={myImage}
@@ -105,16 +148,17 @@ export default function AboutPage(): React.ReactElement {
                 fill
                 className="rounded-full object-cover border-4 border-white/20 shadow-2xl"
                 priority
+                sizes="(max-width: 768px) 192px, 192px"
               />
             </motion.div>
 
-
             {/* Name */}
             <motion.h1 
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
               className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight"
+              style={{ willChange: 'transform' }}
             >
               Irish Lince
             </motion.h1>
@@ -169,43 +213,68 @@ export default function AboutPage(): React.ReactElement {
                 </motion.a>
               ))}
             </motion.div>
-
-            {/* Download Resume Button */}
           </div>
         </section>
 
-        
-
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          id="aboutme"
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true, margin: '0px 0px -100px 0px' }}
+          style={{ willChange: 'transform' }}
         >
-          <Aboutme />
+          <Suspense fallback={<SectionLoading />}>
+            <Aboutme />
+          </Suspense>
         </motion.div>
 
         {/* Skills Sections */}
         <motion.div
+          id="technicalskills"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <TechnicalSkills />
+          <Suspense fallback={<SectionLoading />}>
+            <TechnicalSkills />
+          </Suspense>
         </motion.div>
 
         <motion.div
+          id="myprojects"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+          viewport={{ once: true }}
+        >
+          <Suspense fallback={<SectionLoading />}>
+            <MyProjects />
+          </Suspense>
+        </motion.div>
+      </motion.main>
+
+        <motion.div
+          id="education"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
           viewport={{ once: true }}
         >
-          <EducationGoals />
+          <Suspense fallback={<SectionLoading />}>
+            <EducationGoals />
+          </Suspense>
         </motion.div>
-      </motion.main>
 
-      <Footer />
+      <Suspense fallback={null}>
+        <Footer_Component />
+      </Suspense>
     </div>
   )
 }
+
+const AboutPage = memo(AboutPageContent)
+AboutPageContent.displayName = 'AboutPageContent'
+
+export default AboutPage

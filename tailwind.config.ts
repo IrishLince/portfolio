@@ -7,6 +7,12 @@ export default {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  // Performance: disable unused browser prefixes
+  corePlugins: {
+    preflight: true,
+  },
+  // Performance: minimize CSS output
+  safelist: [],
   theme: {
   	extend: {
   		colors: {
@@ -51,25 +57,24 @@ export default {
   				'5': 'hsl(var(--chart-5))'
   			}
   		},
+  		// Use transform and opacity for animations (GPU accelerated)
   		keyframes: {
   			fadeIn: {
   				'0%': {
-  					opacity: '0',
-  					transform: 'translateY(20px)'
+  					opacity: '0'
   				},
   				'100%': {
-  					opacity: '1',
-  					transform: 'translateY(0)'
+  					opacity: '1'
   				}
   			},
   			scaleIn: {
   				'0%': {
   					opacity: '0',
-  					transform: 'scale(0.95) translateY(20px)'
+  					transform: 'scale(0.95)'
   				},
   				'100%': {
   					opacity: '1',
-  					transform: 'scale(1) translateY(0)'
+  					transform: 'scale(1)'
   				}
   			},
   			slideIn: {
