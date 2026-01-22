@@ -15,6 +15,26 @@ const ProjectAccordion = () => {
   const projects = [
     {
       id: "item-1",
+      
+
+      title: "Blood Bank Management System",
+      technology: "React.js, Tailwind CSS, JavaScript, MongoDB, Node.js, Railway.app",
+      description: "A web-based system for managing blood donors, inventory, and requests. It helps blood banks organize records, track blood availability, and process requests efficiently through a centralized platform.",
+      projectUrl: "https://redsource.up.railway.app/",
+      role: "Team Leader Frontend Developer",
+      duration: "2024",
+      keyFeatures: [
+        "Donor registration",
+        "Blood inventory tracking",
+        "Request management",
+        "Admin dashboard",
+        "Responsive design"
+      ]
+    },
+    {
+      id: "item-2",
+      
+
       title: "Websystem Final",
       technology: "Tailwind CSS, Github Live hosting",
       description: "A personal portfolio website showcasing my skills and projects. Features a responsive design, dark theme, and modern UI components.",
@@ -26,21 +46,6 @@ const ProjectAccordion = () => {
         "Dark Theme",
         "Modern UI Components",
         "Figma templates"
-      ]
-    },
-    {
-      id: "item-2",
-      title: "Macmac",
-      technology: "Tailwind CSS, Github Live hosting",
-      description: "I created a website for my dog, Macmac, as part of this project. The idea came to me as a way to ensure his safety. I plan to attach a QR code to his leash that links directly to the website. If Macmac ever gets lost, anyone can simply scan the QR code to access all his details on the site, hosted live on GitHub.",
-      projectUrl: "https://irishlince.github.io/Macmac/",
-      role: "Frontend Developer",
-      duration: "2023",
-      keyFeatures: [
-        "QR code linking to the website for quick access",
-        "Details about Macmac, including contact information",
-        "Live hosting on GitHub for easy availability",
-        "Responsive design for mobile and desktop users"
       ]
     },
     {
