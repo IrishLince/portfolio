@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, memo, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronDown, ExternalLink, Briefcase, Calendar, Code, Zap, CheckCircle } from 'lucide-react'
+import { ChevronDown, ExternalLink, Briefcase, Calendar, Code, Zap, CheckCircle, Droplet, Globe, BarChart3 } from 'lucide-react'
 
 // Type definitions
 interface Project {
@@ -13,6 +13,7 @@ interface Project {
   role: string
   duration: string
   keyFeatures: string[]
+  icon: React.ReactNode
 }
 
 interface ProjectCardProps {
@@ -38,7 +39,8 @@ const PROJECTS_DATA: Project[] = [
       "Request management",
       "Admin dashboard",
       "Responsive design"
-    ]
+    ],
+    icon: <Droplet className="w-8 h-8 text-[#ff4d00]" />
   },
   {
     id: "item-2",
@@ -53,7 +55,8 @@ const PROJECTS_DATA: Project[] = [
       "Dark Theme",
       "Modern UI Components",
       "Figma templates"
-    ]
+    ],
+    icon: <Globe className="w-8 h-8 text-[#ff4d00]" />
   },
   {
     id: "item-3",
@@ -68,7 +71,8 @@ const PROJECTS_DATA: Project[] = [
       "Product Management",
       "Order Tracking",
       "Customer Analytics"
-    ]
+    ],
+    icon: <BarChart3 className="w-8 h-8 text-[#ff4d00]" />
   }
 ]
 
@@ -88,19 +92,31 @@ const ProjectCard = memo(({ project, isOpen, onToggle, index }: ProjectCardProps
       <div className="bg-gradient-to-br from-[#1a1a1a] to-[#0f0f0f] border border-gray-800/50 rounded-2xl p-6 sm:p-8 hover:border-[#ff4d00]/30 transition-all duration-300 cursor-pointer group/card"
       >
         <div className="flex items-start justify-between gap-4">
-          <div className="flex-1 min-w-0">
-            <motion.h3 
-              className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-[#ff6b35] to-[#ff4d00] bg-clip-text text-transparent mb-2 group-hover/card:from-[#ff8a5b] group-hover/card:to-[#ff6b35] transition-all duration-300"
+          <div className="flex items-start gap-4 flex-1 min-w-0">
+            {/* Icon */}
+            <motion.div 
+              whileHover={{ rotate: 10, scale: 1.1 }}
+              className="flex-shrink-0 p-3 bg-[#ff4d00]/10 rounded-xl group-hover/card:bg-[#ff4d00]/20 transition-all duration-300"
             >
-              {project.title}
-            </motion.h3>
-            <div className="flex flex-wrap items-center gap-2 mb-4">
-              <Code className="w-4 h-4 text-[#ff4d00]" />
-              <p className="text-sm text-gray-400 font-medium">
-                {project.technology}
-              </p>
+              {project.icon}
+            </motion.div>
+            
+            {/* Content */}
+            <div className="flex-1 min-w-0">
+              <motion.h3 
+                className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-[#ff6b35] to-[#ff4d00] bg-clip-text text-transparent mb-2 group-hover/card:from-[#ff8a5b] group-hover/card:to-[#ff6b35] transition-all duration-300 line-clamp-2"
+              >
+                {project.title}
+              </motion.h3>
+              <div className="flex flex-wrap items-center gap-2 mb-2">
+                <Code className="w-4 h-4 text-[#ff4d00]" />
+                <p className="text-sm text-gray-400 font-medium line-clamp-1">
+                  {project.technology}
+                </p>
+              </div>
             </div>
           </div>
+          
           <motion.div
             animate={{ rotate: isOpen ? 180 : 0 }}
             transition={{ duration: 0.3 }}
