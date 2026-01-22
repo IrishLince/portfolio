@@ -114,7 +114,7 @@ export function TechnicalSkills(): React.ReactElement {
             <FaCode className="w-10 h-10 text-blue-400 group-hover:rotate-12 transition-transform duration-300" />
             <div className="absolute inset-0 bg-blue-400/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </motion.div>
-          <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-3 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight mb-3 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
             Technical Skills
           </h2>
           <p className="text-gray-400 max-w-3xl text-sm leading-relaxed">

@@ -1,9 +1,8 @@
 'use client'
-import React, { useMemo, memo, Suspense, lazy, useCallback } from 'react'
+import React, { memo, Suspense, lazy, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Footer } from '../footer'
 import { StaggeredMenu } from '../StaggeredMenu'
 
 import { 
@@ -11,6 +10,18 @@ import {
   Mail, Phone, MapPin
 } from 'lucide-react'
 import myImage from '../Pictures/IrishFormal.png'
+
+// Type definitions
+interface MenuItem {
+  label: string
+  ariaLabel?: string
+  link: string
+}
+
+interface SocialMenuItem {
+  label: string
+  link: string
+}
 
 // Lazy load all major section components
 const Plasma = lazy(() => import('../plasma'))
@@ -57,7 +68,7 @@ const contactInfo = [
   }
 ]
 
-const menuItems = [
+const menuItems: MenuItem[] = [
   { label: 'Home', ariaLabel: 'Go to home section', link: '#home' },
   { label: 'About Me', ariaLabel: 'Learn about me', link: '#aboutme' },
   { label: 'Technical Skills', ariaLabel: 'View my technical skills', link: '#technicalskills' },
@@ -65,7 +76,7 @@ const menuItems = [
   { label: 'Education', ariaLabel: 'View my education', link: '#education' }
 ]
 
-const socialMenuItems = [
+const socialMenuItems: SocialMenuItem[] = [
   { label: 'Instagram', link: 'https://www.instagram.com/cartiii_dior/' },
   { label: 'GitHub', link: 'https://github.com/IrishLince' },
   { label: 'Twitter', link: 'https://x.com/iriiiissshh?s=21' }
@@ -157,7 +168,7 @@ function AboutPageContent(): React.ReactElement {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight"
               style={{ willChange: 'transform' }}
             >
               Irish Lince
@@ -168,7 +179,7 @@ function AboutPageContent(): React.ReactElement {
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.5 }}
-              className="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto"
+              className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-300 mb-8 max-w-2xl mx-auto"
             >
               BSIT Student | Web Developer | Design Enthusiast
             </motion.p>

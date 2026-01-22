@@ -3,8 +3,27 @@ import React, { useState, memo, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { ChevronDown, ExternalLink } from 'lucide-react'
 
+// Type definitions
+interface Project {
+  id: string
+  title: string
+  technology: string
+  description: string
+  projectUrl?: string
+  role: string
+  duration: string
+  keyFeatures: string[]
+}
+
+interface ProjectCardProps {
+  project: Project
+  isOpen: boolean
+  onToggle: (id: string) => void
+  index: number
+}
+
 // Memoize projects data outside component
-const PROJECTS_DATA = [
+const PROJECTS_DATA: Project[] = [
   {
     id: "item-1",
     title: "Blood Bank Management System",
@@ -53,7 +72,7 @@ const PROJECTS_DATA = [
 ]
 
 // Memoize ProjectCard component
-const ProjectCard = memo(({ project, isOpen, onToggle, index }) => (
+const ProjectCard = memo(({ project, isOpen, onToggle, index }: ProjectCardProps) => (
   <motion.div
     key={project.id}
     initial={{ opacity: 0, y: 30 }}
@@ -111,7 +130,7 @@ const ProjectCard = memo(({ project, isOpen, onToggle, index }) => (
         <div className="space-y-4">
           <h4 className="text-lg md:text-xl font-semibold text-white">Key Features</h4>
           <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {project.keyFeatures.map((feature, idx) => (
+            {project.keyFeatures.map((feature: string, idx: number) => (
               <li
                 key={idx}
                 className="text-gray-300 flex items-center gap-3 bg-[#2a2a2a]/30 rounded-lg px-4 py-3 md:py-4 transition-all duration-300 hover:translate-x-1 hover:bg-[#2a2a2a]/50"
@@ -156,7 +175,7 @@ function MyProjectsContent() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">My Projects</h2>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">My Projects</h2>
           <p className="text-gray-400 text-lg">Explore my recent work and achievements</p>
         </motion.div>
 

@@ -53,7 +53,7 @@ function AboutmeContent(): React.ReactElement {
             <div className="mb-6 md:mb-8">
               <Shuffle
                 text="About Me"
-                className="text-2xl sm:text-3xl md:text-4xl text-white"
+                className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-white"
                 style={{ fontFamily: "var(--font-pixel), 'Press Start 2P', cursive" }}
                 shuffleDirection="right"
                 duration={0.35}

@@ -1,17 +1,29 @@
 'use client'
 import Link from 'next/link'
 import { useState, useEffect, memo, useCallback } from 'react'
-import { Menu, X, Home, Briefcase } from 'lucide-react'
+import { Menu, X, Home, Briefcase, LucideIcon } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { usePathname } from 'next/navigation'
 
+// Type definitions
+interface NavItem {
+  name: string
+  path: string
+  icon: LucideIcon
+}
+
+interface NavLinkProps {
+  item: NavItem
+  pathname: string
+}
+
 // Memoized nav items to prevent recreation
-const NAV_ITEMS = [
+const NAV_ITEMS: NavItem[] = [
   { name: 'Home', path: '/', icon: Home },
   { name: 'My Projects', path: '/myproject', icon: Briefcase }
 ]
 
-const NavLink = memo(({ item, pathname, onClose }: any) => (
+const NavLink = memo(({ item, pathname }: NavLinkProps) => (
   <motion.div
     initial={{ opacity: 0, y: -20 }}
     animate={{ opacity: 1, y: 0 }}
@@ -40,7 +52,13 @@ const NavLink = memo(({ item, pathname, onClose }: any) => (
 ))
 NavLink.displayName = 'NavLink'
 
-const MobileNavLink = memo(({ item, pathname, onClose }: any) => (
+interface MobileNavLinkProps {
+  item: NavItem
+  pathname: string
+  onClose: () => void
+}
+
+const MobileNavLink = memo(({ item, pathname, onClose }: MobileNavLinkProps) => (
   <motion.div
     initial={{ opacity: 0, x: -20 }}
     animate={{ opacity: 1, x: 0 }}
@@ -127,7 +145,7 @@ function NavbarContent() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
             {NAV_ITEMS.map((item) => (
-              <NavLink key={item.name} item={item} pathname={pathname} onClose={closeMenu} />
+              <NavLink key={item.name} item={item} pathname={pathname} />
             ))}
           </div>
 
@@ -157,7 +175,7 @@ function NavbarContent() {
               className="md:hidden bg-[#1a1a1a]/95 backdrop-blur-md border-t border-gray-800/50 overflow-hidden"
             >
               <div className="flex flex-col px-4 py-4 space-y-2">
-                {NAV_ITEMS.map((item, index) => (
+                {NAV_ITEMS.map((item) => (
                   <MobileNavLink key={item.name} item={item} pathname={pathname} onClose={closeMenu} />
                 ))}
               </div>

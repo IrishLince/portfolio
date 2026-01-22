@@ -6,7 +6,7 @@ import {
   Lightbulb, CheckCircle
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import React, { useState, useCallback, useMemo, memo } from 'react'
+import React, { useState, useCallback } from 'react'
 
 const EDUCATION_DATA = [
   {
@@ -80,7 +80,7 @@ export function EducationGoals(): React.ReactElement {
             <Book className="w-14 h-14 text-blue-400" />
           </motion.div>
           
-          <h2 className="text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
   Learning and Growth
 </h2>
           
