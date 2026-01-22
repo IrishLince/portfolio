@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, memo, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronDown, ExternalLink, Briefcase, Calendar, Code, Zap, CheckCircle, Droplet, Globe, BarChart3 } from 'lucide-react'
+import { ChevronDown, ExternalLink, Briefcase, Calendar, Code, Zap, CheckCircle, Droplet, Globe, BarChart3, Briefcase as BriefcaseIcon } from 'lucide-react'
 
 // Type definitions
 interface Project {
@@ -231,30 +231,31 @@ function MyProjectsContent() {
   }, [])
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 relative">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <motion.h2 
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-white via-white to-gray-400 bg-clip-text text-transparent mb-4"
+    <section className="py-16 px-6 lg:px-12 bg-[#1a1a1a] relative overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" style={{ willChange: 'contents' }}></div>
+
+      <div className="max-w-7xl mx-auto relative z-10">
+        {/* Header Section */}
+        <div className="text-center mb-24">
+          <motion.div
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.4 }}
+            className="inline-block p-6 rounded-3xl bg-[#ff4d00]/10 mb-8"
+            style={{ willChange: 'transform' }}
           >
+            <BriefcaseIcon className="w-14 h-14 text-[#ff4d00]" />
+          </motion.div>
+          
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-[#ff6b35] via-[#ff4d00] to-[#ff8a5b] bg-clip-text text-transparent">
             My Projects
-          </motion.h2>
-          <motion.p 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="text-lg text-gray-400 font-medium"
-          >
-            Explore my recent work and achievements
-          </motion.p>
-        </motion.div>
+          </h2>
+          
+          <p className="text-gray-400 max-w-3xl mx-auto text-xl">
+            Showcase of my recent work and achievements with modern technologies
+          </p>
+        </div>
 
         {/* Projects Grid */}
         <div className="space-y-4">
@@ -269,6 +270,10 @@ function MyProjectsContent() {
           ))}
         </div>
       </div>
+
+      {/* Decorative Elements */}
+      <div className="absolute top-20 left-20 w-96 h-96 bg-[#ff4d00]/5 rounded-full blur-[100px] -z-10"></div>
+      <div className="absolute bottom-20 right-20 w-96 h-96 bg-orange-500/5 rounded-full blur-[100px] -z-10"></div>
     </section>
   )
 }
