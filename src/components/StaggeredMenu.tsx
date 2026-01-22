@@ -1,5 +1,7 @@
 import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import { gsap } from 'gsap';
+import myImage from './Pictures/IrishFormal.png';
 
 // Type definitions
 interface StaggeredMenuProps {
@@ -10,7 +12,6 @@ interface StaggeredMenuProps {
   displaySocials?: boolean;
   displayItemNumbering?: boolean;
   className?: string;
-  logoUrl?: string;
   menuButtonColor?: string;
   openMenuButtonColor?: string;
   changeMenuColorOnOpen?: boolean;
@@ -41,7 +42,6 @@ export const StaggeredMenu = ({
   displaySocials = true,
   displayItemNumbering = true,
   className = '',
-  logoUrl = '/src/assets/logos/reactbits-gh-white.svg',
   menuButtonColor = '#fff',
   openMenuButtonColor = '#fff',
   changeMenuColorOnOpen = true,
@@ -424,13 +424,13 @@ export const StaggeredMenu = ({
           aria-label="Main navigation header"
         >
           <div className="sm-logo flex items-center select-none pointer-events-auto" aria-label="Logo">
-            <img
-              src={logoUrl || '/src/assets/logos/reactbits-gh-white.svg'}
-              alt="Logo"
-              className="sm-logo-img block h-8 w-auto object-contain"
-              draggable={false}
-              width={110}
-              height={24}
+            <Image
+              src={myImage}
+              alt="Irish Lince Logo"
+              className="sm-logo-img block h-12 w-12 object-cover rounded-full border-2 border-black"
+              width={48}
+              height={48}
+              priority
             />
           </div>
 
