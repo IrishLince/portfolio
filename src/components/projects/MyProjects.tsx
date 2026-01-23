@@ -44,17 +44,19 @@ const PROJECTS_DATA: Project[] = [
   },
   {
     id: "item-2",
-    title: "Websystem Final",
-    technology: "Tailwind CSS, Github Live hosting",
-    description: "A personal portfolio website showcasing my skills and projects. Features a responsive design, dark theme, and modern UI components.",
-    projectUrl: "https://irishlince.github.io/websys-final",
-    role: "Frontend Developer",
+    title: "Mecha Mods - Figma Design",
+    technology: "Figma, UI/UX Design",
+    description: "A comprehensive Figma design system for Mecha Mods mechanical keyboard e-commerce platform. This project encompasses a complete design approach with detailed user personas to understand target customers, information architecture that organizes product categories and services logically, wireframes defining layout structure and user flows, and a cohesive design system with reusable components. The design includes mood boards capturing the brand aesthetic, responsive layout variations for different screen sizes, user flow diagrams mapping customer journeys, and a priority matrix for feature implementation. Every design decision was made with user experience in mind, ensuring intuitive navigation, visual hierarchy, and seamless interaction patterns across all pages.",
+    projectUrl: "https://www.figma.com/design/0UopDZT46U0Tv4K2zISpAy/Lince_Mechamods_INDIVIDUAL?node-id=0-1&t=HjhaHcKKEB1sLZTf-1",
+    role: "UI/UX Designer",
     duration: "2024",
     keyFeatures: [
-      "Responsive Design",
-      "Dark Theme",
-      "Modern UI Components",
-      "Figma templates"
+      "User Personas - Understanding target audience and their needs",
+      "Information Architecture - Logical organization of content and services",
+      "Wireframes - Layout and structural design of all pages",
+      "Design System - Reusable components and design tokens",
+      "Mood Board - Brand aesthetic and visual direction",
+      "Responsive Layouts - Multi-device design variations"
     ],
     icon: <Globe className="w-8 h-8 text-[#ff4d00]" />
   },
