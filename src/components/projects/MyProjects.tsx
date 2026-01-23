@@ -61,16 +61,18 @@ const PROJECTS_DATA: Project[] = [
   {
     id: "item-3",
     title: "E-commerce Dashboard",
-    technology: "Next.js, Java Backend, RESTful APIs",
-    description: "Created an administrative dashboard for managing products, orders, and customer data with real-time updates.",
-    projectUrl: "#",
-    role: "Backend Developer",
+    technology: "Next.js, React, Node.js Backend, RESTful APIs",
+    description: "Mecha Mods is your go-to destination for all things mechanical keyboards. Whether you're looking for high-quality keyboards, key-caps, switches, or accessories, we offer a wide range of products to cater to your needs. Our listings are detailed with images and specifications to help you make informed decisions. Additionally, we provide professional services including keyboard assembly, switch lubing, and custom switch modifications. These services are designed to enhance the performance and longevity of your keyboard, ensuring it delivers the best experience possible. At Mecha Mods, we focus on providing a seamless shopping experience with easy-to-navigate menus and a secure payment system, so you can shop with confidence.",
+    projectUrl: "https://mechamods.up.railway.app/",
+    role: "Full Stack Developer",
     duration: "2023",
     keyFeatures: [
-      "Real-time Updates",
-      "Product Management",
-      "Order Tracking",
-      "Customer Analytics"
+      "Wide Product Selection",
+      "Detailed Product Listings with Images",
+      "Professional Services (Assembly, Lubing, Modifications)",
+      "Secure Payment System",
+      "Seamless Shopping Experience",
+      "Customer Support"
     ],
     icon: <BarChart3 className="w-8 h-8 text-[#ff4d00]" />
   }
