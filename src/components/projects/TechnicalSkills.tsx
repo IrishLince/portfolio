@@ -83,7 +83,7 @@ const SkillCard = memo(({ skill, index }: { skill: typeof HARD_SKILLS[0]; index:
 ))
 SkillCard.displayName = 'SkillCard'
 
-export function TechnicalSkills(): React.ReactElement {
+function TechnicalSkillsContent(): React.ReactElement {
 
   return (
     <section className="py-16 px-4 lg:px-8 bg-gradient-to-br from-[#0a0a0a] via-[#1a1a1a] to-[#2a2a2a] relative overflow-hidden">
@@ -251,9 +251,12 @@ export function TechnicalSkills(): React.ReactElement {
         </motion.div>
       </motion.div>
 
-      {/* Decorative Elements */}
-      <div className="absolute top-20 left-20 w-96 h-96 bg-blue-500/20 rounded-full blur-[150px] -z-10 animate-pulse"></div>
-      <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-500/20 rounded-full blur-[150px] -z-10 animate-pulse"></div>
+      {/* Decorative Elements - removed animate-pulse for performance */}
+      <div className="absolute top-20 left-20 w-96 h-96 bg-blue-500/20 rounded-full blur-[150px] -z-10"></div>
+      <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-500/20 rounded-full blur-[150px] -z-10"></div>
     </section>
   )
 }
+
+export const TechnicalSkills = memo(TechnicalSkillsContent)
+TechnicalSkillsContent.displayName = 'TechnicalSkillsContent'

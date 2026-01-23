@@ -6,8 +6,9 @@ import {
   Lightbulb, CheckCircle
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, memo, useMemo } from 'react'
 
+// Memoize education data outside component
 const EDUCATION_DATA = [
   {
     title: "Current Education",
@@ -54,13 +55,85 @@ const EDUCATION_DATA = [
   }
 ]
 
-export function EducationGoals(): React.ReactElement {
-  const [, setActiveCard] = useState<number | null>(null)
+// Memoized Education Card component
+const EducationCard = memo(({ item, index, selectedView }: { item: typeof EDUCATION_DATA[0]; index: number; selectedView: string }) => (
+  <motion.div
+    key={index}
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5, delay: index * 0.1 }}
+    className={`relative group rounded-2xl bg-[#2a2a2a] p-8 hover:bg-[#333333] 
+      transition-all duration-300 cursor-pointer ${
+        selectedView === 'timeline' 
+          ? 'max-w-3xl mx-auto w-full relative before:absolute before:left-[-30px] before:top-0 before:w-[2px] before:h-full before:bg-blue-500/20' 
+          : ''
+      }`}
+    style={{ willChange: 'transform' }}
+  >
+    {/* Timeline Dot */}
+    {selectedView === 'timeline' && (
+      <div className="absolute left-[-39px] top-8 w-[20px] h-[20px] rounded-full bg-blue-500 z-10" />
+    )}
+
+    {/* Card Header */}
+    <div className="flex items-start gap-4 mb-6">
+      <div className={`p-4 rounded-xl ${item.bgColor}`}>
+        {item.icon}
+      </div>
+      <div>
+        <h3 className="text-2xl font-semibold text-white mb-2">
+          {item.title}
+        </h3>
+        {item.details.school && (
+          <p className="text-gray-400">
+            {item.details.school}
+          </p>
+        )}
+      </div>
+    </div>
+
+    {/* Card Content */}
+    <div className="space-y-4">
+      {item.details.degree && (
+        <div className="flex items-center gap-2 text-blue-400">
+          <GraduationCap className="w-5 h-5" />
+          <span>{item.details.degree}</span>
+        </div>
+      )}
+
+      {/* Highlights/Goals/Areas */}
+      <div className="space-y-3">
+        {(item.details.highlights || item.details.goals || item.details.areas)?.map((point, idx) => (
+          <div
+            key={idx}
+            className="flex items-start gap-3 group/item"
+          >
+            <CheckCircle className="w-5 h-5 text-gray-500 mt-0.5 group-hover/item:text-blue-400" />
+            <span className="text-gray-400 group-hover/item:text-gray-300">
+              {point}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </motion.div>
+))
+EducationCard.displayName = 'EducationCard'
+
+function EducationGoalsContent(): React.ReactElement {
   const [selectedView, setSelectedView] = useState('timeline')
   
   const handleViewChange = useCallback((view: string) => {
     setSelectedView(view)
   }, [])
+
+  // Memoize container class
+  const containerClass = useMemo(() => 
+    selectedView === 'grid' 
+      ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8' 
+      : 'flex flex-col space-y-8',
+    [selectedView]
+  )
 
   return (
    <section className="py-16 px-6 lg:px-12 bg-[#1a1a1a] relative overflow-hidden">
@@ -114,80 +187,15 @@ export function EducationGoals(): React.ReactElement {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.5 }}
-            className={`${
-              selectedView === 'grid' 
-                ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8' 
-                : 'flex flex-col space-y-8'
-            }`}
+            className={containerClass}
           >
             {EDUCATION_DATA.map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className={`relative group rounded-2xl bg-[#2a2a2a] p-8 hover:bg-[#333333] 
-                  transition-all duration-300 cursor-pointer ${
-                    selectedView === 'timeline' 
-                      ? 'max-w-3xl mx-auto w-full relative before:absolute before:left-[-30px] before:top-0 before:w-[2px] before:h-full before:bg-blue-500/20' 
-                      : ''
-                  }`}
-                onHoverStart={() => setActiveCard(index)}
-                onHoverEnd={() => setActiveCard(null)}
-              >
-                {/* Timeline Dot */}
-                {selectedView === 'timeline' && (
-                  <div className="absolute left-[-39px] top-8 w-[20px] h-[20px] rounded-full bg-blue-500 z-10" />
-                )}
-
-                {/* Status Badge */}
-                <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs
-                  ${item.bgColor} ${item.textColor}`}>
-                  {item.status}
-                </div>
-
-                {/* Card Header */}
-                <div className="flex items-start gap-4 mb-6">
-                  <div className={`p-4 rounded-xl ${item.bgColor}`}>
-                    {item.icon}
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-semibold text-white mb-2">
-                      {item.title}
-                    </h3>
-                    {item.details.school && (
-                      <p className="text-gray-400">
-                        {item.details.school}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Card Content */}
-                <div className="space-y-4">
-                  {item.details.degree && (
-                    <div className="flex items-center gap-2 text-blue-400">
-                      <GraduationCap className="w-5 h-5" />
-                      <span>{item.details.degree}</span>
-                    </div>
-                  )}
-
-                  {/* Highlights/Goals/Areas */}
-                  <div className="space-y-3">
-                    {(item.details.highlights || item.details.goals || item.details.areas)?.map((point, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-start gap-3 group/item"
-                      >
-                        <CheckCircle className="w-5 h-5 text-gray-500 mt-0.5 group-hover/item:text-blue-400" />
-                        <span className="text-gray-400 group-hover/item:text-gray-300">
-                          {point}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
+              <EducationCard 
+                key={index} 
+                item={item} 
+                index={index} 
+                selectedView={selectedView} 
+              />
             ))}
           </motion.div>
         </AnimatePresence>
@@ -216,3 +224,6 @@ export function EducationGoals(): React.ReactElement {
     </section>
   )
 }
+
+export const EducationGoals = memo(EducationGoalsContent)
+EducationGoalsContent.displayName = 'EducationGoalsContent'

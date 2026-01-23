@@ -180,6 +180,10 @@ export default function Aurora(props: AuroraProps) {
     const mesh = new Mesh(gl, { geometry, program });
     ctn.appendChild(gl.canvas);
 
+    // Cache color conversion to avoid recalculating every frame
+    let cachedStops = colorStopsArray;
+    let lastStopsKey = (propsRef.current.colorStops ?? colorStops).join(',');
+    
     let animateId = 0;
     const update = (t: number) => {
       animateId = requestAnimationFrame(update);
@@ -187,11 +191,18 @@ export default function Aurora(props: AuroraProps) {
       program.uniforms.uTime.value = time * speed * 0.1;
       program.uniforms.uAmplitude.value = propsRef.current.amplitude ?? 1.0;
       program.uniforms.uBlend.value = propsRef.current.blend ?? blend;
-      const stops = propsRef.current.colorStops ?? colorStops;
-      program.uniforms.uColorStops.value = stops.map((hex: string) => {
-        const c = new Color(hex);
-        return [c.r, c.g, c.b];
-      });
+      
+      // Only recalculate color stops if they changed
+      const currentStops = propsRef.current.colorStops ?? colorStops;
+      const currentKey = currentStops.join(',');
+      if (currentKey !== lastStopsKey) {
+        cachedStops = currentStops.map((hex: string) => {
+          const c = new Color(hex);
+          return [c.r, c.g, c.b];
+        });
+        lastStopsKey = currentKey;
+      }
+      program.uniforms.uColorStops.value = cachedStops;
       renderer.render({ scene: mesh });
     };
     animateId = requestAnimationFrame(update);

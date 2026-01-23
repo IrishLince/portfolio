@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback, memo } from 'react';
+import { useEffect, useRef, useCallback, memo, useMemo } from 'react';
 
 function hexToRgba(hex, alpha = 1) {
   if (!hex) return `rgba(0,0,0,${alpha})`;
@@ -15,6 +15,14 @@ function hexToRgba(hex, alpha = 1) {
   const b = int & 255;
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
+
+// Mobile detection helper
+const isMobileDevice = () => {
+  if (typeof window === 'undefined') return false;
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+    window.innerWidth < 768 ||
+    ('ontouchstart' in window);
+};
 
 const ElectricBorderContent = ({
   children,
@@ -152,7 +160,8 @@ const ElectricBorderContent = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const octaves = 8; // Reduced from 10
+    const isMobile = isMobileDevice();
+    const octaves = isMobile ? 4 : 6; // Reduced octaves for mobile
     const lacunarity = 1.6;
     const gain = 0.7;
     const amplitude = chaos;
@@ -160,13 +169,18 @@ const ElectricBorderContent = ({
     const baseFlatness = 0;
     const displacement = 60;
     const borderOffset = 60;
+    
+    // Frame limiting for mobile - target 30fps instead of 60fps
+    const targetFPS = isMobile ? 30 : 60;
+    const frameInterval = 1000 / targetFPS;
+    let lastDrawTime = 0;
 
     const updateSize = () => {
       const rect = container.getBoundingClientRect();
       const width = rect.width + borderOffset * 2;
       const height = rect.height + borderOffset * 2;
 
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5); // Cap DPR for low-end devices
+      const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 1.5); // Use DPR 1 on mobile
       canvas.width = width * dpr;
       canvas.height = height * dpr;
       canvas.style.width = `${width}px`;
@@ -182,11 +196,18 @@ const ElectricBorderContent = ({
     const drawElectricBorder = currentTime => {
       if (!canvas || !ctx) return;
 
+      // Frame limiting - skip frames on mobile
+      if (currentTime - lastDrawTime < frameInterval) {
+        animationRef.current = requestAnimationFrame(drawElectricBorder);
+        return;
+      }
+      lastDrawTime = currentTime;
+
       const deltaTime = (currentTime - lastFrameTimeRef.current) / 1000;
       timeRef.current += deltaTime * speed;
       lastFrameTimeRef.current = currentTime;
 
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.scale(dpr, dpr);
@@ -206,7 +227,7 @@ const ElectricBorderContent = ({
 
       const approximatePerimeter = 2 * (borderWidth + borderHeight) + 2 * Math.PI * radius;
       // Reduced sample count for better performance on low-end GPUs
-      const sampleCount = Math.floor(approximatePerimeter / 3);
+      const sampleCount = Math.floor(approximatePerimeter / (isMobile ? 5 : 3));
 
       ctx.beginPath();
 
