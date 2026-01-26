@@ -181,7 +181,7 @@ function AboutPageContent(): React.ReactElement {
               transition={{ duration: 0.6, delay: 0.5 }}
               className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-300 mb-8 max-w-2xl mx-auto"
             >
-              BSIT Student | Web Developer | Design Enthusiast
+              IT Support | Web Developer | Design Enthusiast
             </motion.p>
 
             {/* Contact Information */}
